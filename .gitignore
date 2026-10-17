@@ -2,6 +2,9 @@
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 
+# Firebase generated configuration (if applicable)
+lib/firebase_options.dart
+
 # Environment variables and secrets
 .env
 .env.*
