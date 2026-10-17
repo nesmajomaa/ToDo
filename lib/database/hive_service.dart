@@ -1,5 +1,5 @@
 import 'package:hive_ce_flutter/adapters.dart';
-import '../models/todo.dart';
+import '../models/task.dart';
 
 class HiveService {
   String boxName = 'tasks';
@@ -11,18 +11,18 @@ class HiveService {
 
   Box get box => Hive.box(boxName);
 
-  Future<void> addTask(ToDo todo) async{
+  Future<void> addTask(Task todo) async{
     await box.add({
       'title' : todo.title,
       'isComplete' : todo.isComplete,
     });
   }
 
-  List<ToDo> getTasks() {
-    List<ToDo> tasks = [];
+  List<Task> getTasks() {
+    List<Task> tasks = [];
     for (int i = 0; i < box.length; i++) {
       tasks.add(
-        ToDo(
+        Task(
           title: box.getAt(i)['title'],
           isComplete: box.getAt(i)['isComplete'],
         ),
@@ -31,7 +31,7 @@ class HiveService {
     return tasks;
   }
 
-  Future<void> updateTask(int index, ToDo todo) async {
+  Future<void> updateTask(int index, Task todo) async {
     await box.putAt(index, {
       'title': todo.title,
       'isComplete': todo.isComplete,

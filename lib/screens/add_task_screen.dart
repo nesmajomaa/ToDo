@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../database/firestore_service.dart';
 import '../database/hive_service.dart';
-import '../models/todo.dart';
+import '../models/task.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -13,6 +14,7 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   TextEditingController titleController = TextEditingController();
   final HiveService hiveService = HiveService();
+  final FirestoreService firestoreService = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
@@ -83,12 +85,37 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
               child: ElevatedButton(
                 onPressed: () async {
-                  ToDo todo = ToDo(
-                    title: titleController.text,
-                    isComplete: false,
-                  );
-                  await hiveService.addTask(todo);
-                  Navigator.pop(context, true);
+                  final title = titleController.text.trim();
+
+                  if (title.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please enter a task title'),
+                      ),
+                    );
+                    return;
+                  }
+
+                  try {
+                    final todo = Task(
+                      title: title,
+                      isComplete: false,
+                    );
+
+                    await firestoreService.addTask(todo);
+
+                    if (!context.mounted) return;
+
+                    Navigator.pop(context, true);
+                  } catch (e) {
+                    if (!context.mounted) return;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to add task: $e'),
+                      ),
+                    );
+                  }
                 },
 
                 style: ElevatedButton.styleFrom(
@@ -106,5 +133,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    titleController.dispose();
+    super.dispose();
   }
 }

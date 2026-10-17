@@ -7,11 +7,22 @@ import 'package:todo_app/screens/welcome_screen.dart';
 
 import '../database/hive_service.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+
+
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  HiveService hiveService = HiveService();
-  await hiveService.init();
+  // HiveService hiveService = HiveService();
+  // await hiveService.init();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp( MyApp(name: prefs.getString('name'),));
 }
 

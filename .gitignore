@@ -1,3 +1,17 @@
+# Firebase configuration files
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Signing keys
+*.jks
+*.keystore
+key.properties
+
 # Miscellaneous
 *.class
 *.log
